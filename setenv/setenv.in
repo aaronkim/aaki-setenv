@@ -1,0 +1,86 @@
+#!/bin/bash
+export DEBUG="yes"
+
+PREFIX=aaki
+PWD=$(/bin/pwd)
+
+if [ "$DEBUG" == "yes" ]; then
+  echo DEBUG = yes
+  ECHO='echo'
+else
+  echo DEBUG = no
+  ECHO='test'
+fi
+
+$ECHO "PWD = $PWD"
+$ECHO "ENV_TOP = $ENV_TOP"
+
+function get_top() {
+    unset ENV_TOP
+    local TOPFILE=".$PREFIX/setenv/setenv.in"
+
+    if [ -d "$ENV_TOP" -a -f "$ENV_TOP/$TOPFILE" ] ; then
+        (cd $ENV_TOP; PWD=$(/bin/pwd))
+        $ECHO "get_top = 1"
+    else
+        if [ -f $TOPFILE ] ; then
+            ENV_TOP=$PWD
+            $ECHO "get_top = 2"
+        else
+            $ECHO "get_top = 3"
+            local HERE=$PWD
+            T=
+            while [ \( ! \( -f $TOPFILE \) \) -a \( $PWD != "/" \) ]; do
+              cd ..
+              T=$PWD
+              $ECHO "T = $T"
+              if [ -f "$T/$TOPFILE" ] ; then
+                  $ECHO "get_top = 4"
+                  ENV_TOP=$T
+                  break
+              fi
+            done
+            cd $HERE
+        fi
+    fi
+
+    export ENV_TOP=$ENV_TOP
+    echo "ENV_TOP=$ENV_TOP"
+    
+  unset get_top
+}
+
+function set_env_repo() {
+  if [ -d "$ENV_TOP" ]; then
+    ENV_TOP=$ENV_TOP
+  else
+    ENV_TOP=$PWD
+  fi
+
+  cd $ENV_TOP
+  if [ -d .$PREFIX/.repo ]; then
+    $ECHO "set_env_repo 1"
+    cd .$PREFIX
+    repo sync
+  else
+    $ECHO "set_env_repo 2"
+    mkdir .$PREFIX -p
+    cd .$PREFIX
+    repo init -u git@github.com:aaronkim/aaki-manifest.git -b develop
+    repo sync
+  fi
+  cd $ENV_TOP
+
+
+  unset set_env_repo
+}
+
+
+get_top
+$ECHO "get_top = $ENV_TOP"
+
+set_env_repo
+
+
+
+

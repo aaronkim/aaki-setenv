@@ -1,0 +1,97 @@
+#!/bin/bash
+
+if [ -f setenv.sh ]
+then
+  unset AAKI_TOP
+  . setenv.sh
+  echo AAKI_TOP = $AAKI_TOP
+  $(export AAKI_TOP=$AAKI_TOP)
+  declare -x AAKI_TOP=$AAKI_TOP
+  export PATH=$PATH:$AAKI_TOP
+fi
+
+_param_count=$#
+_param_in=$0
+_param_sub=$1
+
+echo "aaki_param_count: $#"
+echo "aaki_param_0: $0"
+echo "aaki_param_1: $1"
+echo ""
+
+func_usage() {
+  echo "usage_param_count: $#"
+  echo "usage_param_0: $0"
+  echo "usage_param_1: $1"
+  echo ""
+
+  if [ $# -lt 1 ]
+  then
+    echo "Usage: $_param_in file ..."
+    return
+  fi
+
+  echo "param_sub: $_param_sub file ..."
+  echo ""
+}
+
+func_help() {
+  echo "help_param_count: $#"
+  echo "help_param_0: $0"
+  echo "help_param_1: $1"
+  echo ""
+
+  echo "param_sub: $_param_sub file ..."
+  echo ""
+}
+
+if [ $_param_count -lt 1 ]
+then
+  func_usage
+fi
+
+func_help "ff"
+
+echo "==================================="
+
+
+if [ -f aaki ]
+then
+  echo aaki
+fi
+
+answer=
+
+if [ -z "$1" ]; then
+    func_help
+    echo -n "Which would you like? [init] "
+    read answer
+else
+    answer=$1
+fi
+
+selection=
+
+OPTION_ITEMS="init config sync build help"
+
+if [ -z "$answer" ]; then
+    selection=init
+else
+    for c in ${OPTION_ITEMS[@]}
+    do
+        if [ "$answer" = "$c" ]
+        then
+            selection=$answer
+        fi
+    done
+fi
+
+if [ -z "$selection" ]; then
+    echo
+    echo "Invalid option: $answer"
+else
+    echo
+    echo "Run : $selection"
+fi
+
+echo
