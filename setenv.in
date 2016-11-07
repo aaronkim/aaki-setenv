@@ -55,6 +55,10 @@ function get_top() {
 }
 
 function set_repo() {
+  local REPO_URL=git@github.com:aaronkim/$PREFIX-manifest.git
+  local REPO_BASE_BRANCH=master
+  local REPO_WORK_BRANCH=develop
+
   if [ -d "$ENV_TOP" ]
     then
       ENV_TOP=$ENV_TOP
@@ -72,8 +76,10 @@ function set_repo() {
       $ECHO "set_repo 2"
       mkdir .$PREFIX -p
       cd .$PREFIX
-      repo init -u git@github.com:aaronkim/aaki-manifest.git -b develop
+      repo init -u $REPO_URL -b $REPO_WORK_BRANCH
       repo sync
+      repo start $REPO_WORK_BRANCH --all
+      repo forall "git branch --set-upstream-to=$REPO_REMOTE/$REPO_BASE_BRANCH $REPO_WORK_BRANCH"
   fi
   cd $ENV_TOP
 
@@ -123,6 +129,3 @@ $ECHO "get_top = $ENV_TOP"
 set_repo
 $ECHO "get_top = $ENV_TOP"
 set_aaki
-
-
-

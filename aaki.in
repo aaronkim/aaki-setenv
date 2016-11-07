@@ -1,5 +1,11 @@
 #!/bin/bash
 
+if [ -z ECHO ]
+  then
+    ECHO='test'
+fi
+
+
 unset AAKI_TOP
 
 #if [ -f aaki-setenv ]
