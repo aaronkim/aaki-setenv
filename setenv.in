@@ -79,7 +79,7 @@ function set_repo() {
       repo init -u $REPO_URL -b $REPO_WORK_BRANCH
       repo sync
       repo start $REPO_WORK_BRANCH --all
-      repo forall "git branch --set-upstream-to=$REPO_REMOTE/$REPO_BASE_BRANCH $REPO_WORK_BRANCH"
+      repo forall -c "git branch --set-upstream-to=$REPO_REMOTE/$REPO_BASE_BRANCH $REPO_WORK_BRANCH"
   fi
   cd $ENV_TOP
 
