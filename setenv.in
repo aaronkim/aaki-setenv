@@ -79,7 +79,7 @@ function set_repo() {
       repo init -u $REPO_URL -b $REPO_WORK_BRANCH
       repo sync
       repo start $REPO_WORK_BRANCH --all
-      repo forall -c 'git branch --set-upstream-to=$REPO_REMOTE/$REPO_BASE_BRANCH $REPO_WORK_BRANCH'
+      repo forall -c 'git branch --set-upstream-to=$REPO_REMOTE/'"$REPO_BASE_BRANCH $REPO_WORK_BRANCH"
       repo sync
   fi
   cd $ENV_TOP
@@ -96,7 +96,12 @@ function set_aaki() {
   fi
 }
 
-COMMAND_ITEMS=$(ls -d $ENV_TOP/.aaki/*/ | sed "s|$ENV_TOP/.aaki||g;s|/||g")
+if [ -d $ENV_TOP/.$PREFIX/setenv/*/ ]
+  then
+    COMMAND_ITEMS=$(ls -d $ENV_TOP/.$PREFIX/setenv/*/ | sed "s|$ENV_TOP/.$PREFIX/setenv/||g;s|/||g;s|setenv||g")
+  else
+    COMMAND_ITEMS=
+fi
 
 function _comp() {
     local cur prev opts
