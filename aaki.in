@@ -2,7 +2,7 @@
 
 if [ -z ECHO ]
   then
-    ECHO='test'
+    export ECHO='test'
 fi
 
 
@@ -15,17 +15,11 @@ unset AAKI_TOP
 
 if [ -n ENV_TOP ]
   then
-    AAKI_TOP=$ENV_TOP
+    export AAKI_TOP=$ENV_TOP
     unset ENV_TOP
   else
     return
 fi
-
-
-
-
-
-
 
 
 
@@ -44,7 +38,7 @@ $ECHO "aaki_param_0: $0"
 $ECHO "aaki_param_1: $1"
 $ECHO ""
 
-func_usage() {
+function func_usage() {
   $ECHO "usage_param_count: $#"
   $ECHO "usage_param_0: $0"
   $ECHO "usage_param_1: $1"
@@ -60,7 +54,7 @@ func_usage() {
   $ECHO ""
 }
 
-func_help() {
+function func_help() {
   $ECHO "help_param_count: $#"
   $ECHO "help_param_0: $0"
   $ECHO "help_param_1: $1"
@@ -78,46 +72,4 @@ fi
 func_help "ff"
 
 $ECHO "==================================="
-
-
-if [ -f aaki ]; then
-  $ECHO aaki
-fi
-
-answer=
-
-if [ -z "$1" ]; then
-    func_help
-    $ECHO -n "Which would you like? [init] "
-    read answer
-else
-    answer=$1
-fi
-
-selection=
-
-OPTION_ITEMS="init config sync build help"
-
-if [ -z "$answer" ]; then
-    selection=init
-else
-    for c in ${OPTION_ITEMS[@]}
-    do
-        if [ "$answer" = "$c" ]
-        then
-            selection=$answer
-        fi
-    done
-fi
-
-if [ -z "$selection" ]; then
-    $ECHO
-    $ECHO "Invalid option: $answer"
-else
-    $ECHO
-    $ECHO "Run : $selection"
-fi
-
-
-
 $ECHO

@@ -7,10 +7,10 @@ PWD=$(/bin/pwd)
 if [ "$DEBUG" == "yes" ]
   then
     echo DEBUG = yes
-    ECHO='echo'
+    export ECHO='echo'
   else
     echo DEBUG = no
-    ECHO='test'
+    export ECHO='test'
 fi
 
 $ECHO "PWD = $PWD"
@@ -96,11 +96,12 @@ function set_aaki() {
   fi
 }
 
+COMMAND_ITEMS="top"
 if [ -d $ENV_TOP/.$PREFIX/setenv/*/ ]
   then
-    COMMAND_ITEMS=$(ls -d $ENV_TOP/.$PREFIX/setenv/*/ | sed "s|$ENV_TOP/.$PREFIX/setenv/||g;s|/||g;s|setenv||g")
+    COMMAND_ITEMS=$COMMAND_ITEMS $(ls -d $ENV_TOP/.$PREFIX/setenv/*/ | sed "s|$ENV_TOP/.$PREFIX/setenv/||g;s|/||g;s|setenv||g")
   else
-    COMMAND_ITEMS=
+    COMMAND_ITEMS=$COMMAND_ITEMS
 fi
 
 function _comp() {
@@ -112,6 +113,14 @@ function _comp() {
 
 #    $ECHO "opts = $opts"
 #    $ECHO "opts{} = ${opts}"
+#    $ECHO "\$#=$#"
+#    $ECHO "\$0=$0"
+#    $ECHO "\$1=$1"
+#    $ECHO "\$2=$2"
+#    $ECHO "\$3=$3"
+#    $ECHO "\$4=$4"
+#    $ECHO "\$5=$5"
+
     if [[ ${cur} == -* ]]
       then
         COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
@@ -120,9 +129,11 @@ function _comp() {
         COMPREPLY=( $(compgen -W "${COMMAND_ITEMS}" -- ${cur}) )
         return 0
     fi
+
+
 }
-complete -o nospace -F _comp aaki
-#complete -F _comp aaki
+#complete -o nospace -F _comp aaki
+complete -F _comp aaki
 
 
 $ECHO "opts=$opts"
