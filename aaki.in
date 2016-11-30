@@ -1,30 +1,30 @@
 #!/bin/bash
 
-if [ -z ECHO ]
+if [[ -z ECHO ]]
   then
     export ECHO='test'
 fi
 
 
-unset AAKI_TOP
+#unset AAKI_TOP
 
 #if [ -f aaki-setenv ]
 #  then
 #    . aaki-setenv
 #fi
 
-if [ -n ENV_TOP ]
+if [[ -n $ENV_TOP ]]
   then
+    unset AAKI_TOP
     export AAKI_TOP=$ENV_TOP
+    $ECHO "ENV_TOP = $ENV_TOP"
+    $ECHO "ENV_TOP len = " $ENV_TOP.len
+    $ECHO "AAKI_TOP = $AAKI_TOP"
+    alias aaki='. $AAKI_TOP/aaki'
     unset ENV_TOP
-  else
-    return
+#  else
+#    return
 fi
-
-
-
-
-
 
 
 
@@ -72,4 +72,13 @@ fi
 func_help "ff"
 
 $ECHO "==================================="
-$ECHO
+
+case $_param_sub in
+  "top")
+    $ECHO "go top = $AAKI_TOP"
+    cd $AAKI_TOP
+    $ECHO "PWD = $(/bin/pwd)"
+    ;;
+  *)
+    ;;
+esac
