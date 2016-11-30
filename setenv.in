@@ -112,6 +112,7 @@ function set_bcdm_repo() {
       mkdir $REPO_PREFIX -p
       cd $REPO_PREFIX
       repo init -u $REPO_URL -b $REPO_WORK_BRANCH
+      ln -s .repo/local_manifests manifests/local_manifests
       repo sync
       repo start $REPO_WORK_BRANCH --all
       repo forall -c 'git branch --set-upstream-to=$REPO_REMOTE/'"$REPO_BASE_BRANCH $REPO_WORK_BRANCH"
