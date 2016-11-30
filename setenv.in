@@ -106,6 +106,7 @@ function set_bcdm_repo() {
     then
       $ECHO "set_bcdm_repo 1"
       cd $REPO_PREFIX
+      ln -s .repo/local_manifests manifests/local_manifests
       repo sync
     else
       $ECHO "set_bcdm_repo 2"
