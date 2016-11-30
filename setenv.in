@@ -80,8 +80,8 @@ function set_aaki_repo() {
       repo init -u $REPO_URL -b $REPO_WORK_BRANCH
       repo sync
       repo start $REPO_WORK_BRANCH --all
-      repo forall -c 'git branch --set-upstream-to=$REPO_REMOTE/'"$REPO_BASE_BRANCH $REPO_WORK_BRANCH"
-      repo sync
+      # repo forall -c 'git branch --set-upstream-to=$REPO_REMOTE/'"$REPO_BASE_BRANCH $REPO_WORK_BRANCH"
+      # repo sync
   fi
   cd $ENV_TOP
 
@@ -116,8 +116,8 @@ function set_bcdm_repo() {
       ln -s manifests/local_manifests .repo/local_manifests
       repo sync
       repo start $REPO_WORK_BRANCH --all
-      repo forall -c 'git branch --set-upstream-to=$REPO_REMOTE/'"$REPO_BASE_BRANCH $REPO_WORK_BRANCH"
-      repo sync
+      # repo forall -c 'git branch --set-upstream-to=$REPO_REMOTE/'"$REPO_BASE_BRANCH $REPO_WORK_BRANCH"
+      # repo sync
   fi
   cd $ENV_TOP
 
