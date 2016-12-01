@@ -4,7 +4,7 @@ export DEBUG="yes"
 PREFIX=aaki
 PWD=$(/bin/pwd)
 
-if [ "$DEBUG" == "yes" ]
+if [[ "$DEBUG" == "yes" ]]
   then
     echo DEBUG = yes
     export ECHO='echo'
@@ -25,7 +25,7 @@ function get_top() {
         (cd $ENV_TOP; PWD=$(/bin/pwd))
         $ECHO "get_top = 1"
       else
-        if [ -f $TOPFILE ]
+        if [[ -f $TOPFILE ]]
           then
             ENV_TOP=$PWD
             $ECHO "get_top = 2"
@@ -60,7 +60,7 @@ function set_aaki_repo() {
   local REPO_BASE_BRANCH=master
   local REPO_WORK_BRANCH=develop
 
-  if [ -d "$ENV_TOP" ]
+  if [[ -d "$ENV_TOP" ]]
     then
       export ENV_TOP=$ENV_TOP
     else
@@ -68,7 +68,7 @@ function set_aaki_repo() {
   fi
 
   cd $ENV_TOP
-  if [ -d $REPO_PREFIX/.repo ]
+  if [[ -d $REPO_PREFIX/.repo ]]
     then
       $ECHO "set_aaki_repo 1"
       cd $REPO_PREFIX
@@ -79,7 +79,7 @@ function set_aaki_repo() {
       cd $REPO_PREFIX
       repo init -u $REPO_URL -b $REPO_WORK_BRANCH
       repo sync
-      repo start $REPO_WORK_BRANCH --all
+      repo start "$REPO_WORK_BRANCH" --all
       # repo forall -c 'git branch --set-upstream-to=$REPO_REMOTE/'"$REPO_BASE_BRANCH $REPO_WORK_BRANCH"
       # repo sync
   fi
@@ -94,7 +94,7 @@ function set_bcdm_repo() {
   local REPO_BASE_BRANCH=master
   local REPO_WORK_BRANCH=develop
 
-  if [ -d "$ENV_TOP" ]
+  if [[ -d "$ENV_TOP" ]]
     then
       export ENV_TOP=$ENV_TOP
     else
@@ -102,20 +102,23 @@ function set_bcdm_repo() {
   fi
 
   cd $ENV_TOP
-  if [ -d $REPO_PREFIX/.repo ]
+  if [[ -d $REPO_PREFIX/.repo ]]
     then
       $ECHO "set_bcdm_repo 1"
       cd $REPO_PREFIX
-      ln -s manifests/local_manifests .repo/local_manifests
+      ln -sf manifests/local_manifests .repo/local_manifests
+      repo forall -c 'git stash clear'
+      repo forall -c 'git stash'
       repo sync
+      repo forall -c 'git stash pop'
     else
       $ECHO "set_bcdm_repo 2"
       mkdir $REPO_PREFIX -p
       cd $REPO_PREFIX
       repo init -u $REPO_URL -b $REPO_WORK_BRANCH
-      ln -s manifests/local_manifests .repo/local_manifests
+      ln -sf manifests/local_manifests .repo/local_manifests
       repo sync
-      repo start $REPO_WORK_BRANCH --all
+      repo start "$REPO_WORK_BRANCH" --all
       # repo forall -c 'git branch --set-upstream-to=$REPO_REMOTE/'"$REPO_BASE_BRANCH $REPO_WORK_BRANCH"
       # repo sync
   fi
@@ -125,7 +128,7 @@ function set_bcdm_repo() {
 }
 
 function set_aaki() {
-  if [ -f $PREFIX ]
+  if [[ -f $PREFIX ]]
     then
       alias $PREFIX='. $ENV_TOP/$PREFIX'
     else
@@ -134,7 +137,7 @@ function set_aaki() {
 }
 
 COMMAND_ITEMS="top"
-if [ -d $ENV_TOP/.$PREFIX/setenv/*/ ]
+if [[ -d $ENV_TOP/.$PREFIX/setenv/*/ ]]
   then
     COMMAND_ITEMS=$COMMAND_ITEMS $(ls -d $ENV_TOP/.$PREFIX/setenv/*/ | sed "s|$ENV_TOP/.$PREFIX/setenv/||g;s|/||g;s|setenv||g")
   else
